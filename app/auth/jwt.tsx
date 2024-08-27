@@ -12,7 +12,7 @@ export const storeJWT = async (token: string) => {
 // Obtener el JWT
 export const getJWT = async () => {
   try {
-    const token = await AsyncStorage.getItem('jwt_token');
+    const token: string | null = await AsyncStorage.getItem('jwt_token');
     return token;
   } catch (error) {
     console.error('Error al obtener el token:', error);

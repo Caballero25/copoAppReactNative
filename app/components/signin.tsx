@@ -1,6 +1,9 @@
-import { View, Image, StyleSheet, Text, TextInput, Pressable } from "react-native"
+import { View, Image, StyleSheet, Text, TextInput, Pressable, ScrollView } from "react-native"
 import { useState } from "react"
-export function Signin() {
+import { Link } from "expo-router"
+
+
+export default function Signin() {
     const [name, setName] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -8,40 +11,41 @@ export function Signin() {
     const [email, setEmail] = useState('')
     const [confirmemail, setConfirmemail] = useState('')
 
-    const fetchSignin = async () => {
-        try {
-          const response = await fetch("https://balance-production-d718.up.railway.app/auth/register", {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: name,
-              username: username,
-              password: password,
-              confirmPassword: confirmpassword,
-              email: email,
-              confirmEmail: confirmemail
-            }),
-          });
-      
-          const data = await response.json();  // Convertir a JSON
-      
-          if (response.status === 400 || response.status === 500) {
-            alert(data.message);  // Acceder al mensaje de error
-          } else if (response.status === 201) {
-            alert("Su cuenta " + username + " se creó satisfactoriamente.");  // Suponiendo que esto es lo que quieres en el caso de éxito
-          }
-        } catch (error) {
-          alert("Error en la solicitud.");
-        }
-      };
+        const fetchSignin = async () => {
+            try {
+              const response = await fetch("https://balance-tests.up.railway.app/auth/register", {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  name: name,
+                  username: username,
+                  password: password,
+                  confirmPassword: confirmpassword,
+                  email: email,
+                  confirmEmail: confirmemail
+                }),
+              });
+          
+              const data = await response.json();  // Convertir a JSON
+          
+              if (response.status === 400 || response.status === 500) {
+                alert(data.message);  // Acceder al mensaje de error
+              } else if (response.status === 201) {
+                alert("Su cuenta " + username + " se creó satisfactoriamente.");  // Suponiendo que esto es lo que quieres en el caso de éxito
+              }
+            } catch (error) {
+              alert("Error en la solicitud.");
+            }
+          };
 
     return (
+        <ScrollView>
         <View style={styles.container}>
             <View style={styles.secondContainer}>
-                <Image style={styles.logoStyle} source={require('../assets/logoCopoGrupo.png')} resizeMode="contain" ></Image>
+                <Image style={styles.logoStyle} source={require('../../assets/logoCopoGrupo.png')} resizeMode="contain" ></Image>
                 <Text style={{textAlign: "center"}}>Registrate con nosotros para llevar nota de tus gastos y costos, planifica tus finanzas hoy.</Text>
                 <View style={styles.inputsContainer}>
                     <TextInput
@@ -83,9 +87,10 @@ export function Signin() {
             </View>
             <View style={styles.haveAccount}>
                 <Text style={{fontWeight: "bold"}}>¿Ya tienes una cuenta? </Text>
-                <Pressable style={{padding: 7}}><Text style={{color: "#174a71", fontWeight: "bold"}}>Iniciar Sesión</Text></Pressable>
+                <Link href={"/components/login"} style={{padding: 7}}><Text style={{color: "#174a71", fontWeight: "bold"}}>Iniciar Sesión</Text></Link>
             </View>
         </View>
+        </ScrollView>
     )
 }
 

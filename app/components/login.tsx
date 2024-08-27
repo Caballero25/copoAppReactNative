@@ -9,8 +9,11 @@ import {
 import { useState, useEffect } from "react";
 import { storeJWT, getJWT, removeJWT } from "../auth/jwt"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 
-export function Login() {
+export default function Login() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [jwt, setJwt] = useState<string | null>(null);
@@ -27,7 +30,7 @@ export function Login() {
   }, [jwt]);
   //Fetch login
   const fetchLogin = () => {
-    fetch("https://balance-production-d718.up.railway.app/auth/login", {
+    fetch("https://balance-tests.up.railway.app/auth/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -43,7 +46,12 @@ export function Login() {
         if (json.status == 400) {
           alert(json.message);
         } else {
-          storeJWT(json.jwt);
+          if (json.jwt == null || json.jwt == "" || json.jwt == undefined) {
+            alert("Hubo un problema en la autenticación")
+          } else {
+            storeJWT(json.jwt);
+          router.replace('homeTab');
+          }
         }
       })
       .catch((error) => {
@@ -55,7 +63,7 @@ export function Login() {
   return (
     <View style={styles.formContainer}>
       <View style={styles.logoContainer}>
-        <Image source={require("../assets/logoCopoGrupo.png")}></Image>
+        <Image source={require("../../assets/logoCopoGrupo.png")}></Image>
       </View>
 
       <TextInput
@@ -74,9 +82,9 @@ export function Login() {
         <Text style={styles.textInputLogin}>Iniciar Sesión</Text>
       </Pressable>
       <Text style={styles.orStyle}>----------- O -----------</Text>
-      <Pressable style={styles.registrarseStyle} onPress={fetchLogin}>
+      <Link href={"/components/signin"} style={styles.registrarseStyle}>
         <Text style={styles.textInputSingIn}>Registrarse</Text>
-      </Pressable>
+      </Link>
     </View>
   );
 }
